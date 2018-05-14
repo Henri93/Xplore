@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/greenMain</color>
+    <color name="colorPrimaryDark">@color/greenBright</color>
+    <color name="colorAccent">@color/accentMain</color>
+
+
+    <!--https://dribbble.com/shots/1814948-Zip-Code-->
+    <color name="greenMain">#53BB96</color>
+    <color name="greenLight">#a0d8af</color>
+    <color name="greenBright">#4BC16B</color>
+    <color name="accentMain">#1c907f</color>
+    <color name="accentDark">#096D6D</color>
+    <color name="dark">#104545</color>
 </resources>
