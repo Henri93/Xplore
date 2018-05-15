@@ -10,6 +10,16 @@
     tools:context="henrygarant.com.xplore.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <TextView
+        android:id="@+id/bestLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="Object"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
+        android:textSize="22sp" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"

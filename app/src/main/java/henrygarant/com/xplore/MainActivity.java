@@ -4,26 +4,44 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.label.FirebaseVisionLabel;
+import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private ImageView imgView;
+    private TextView bestLbl;
+    FirebaseVisionLabel bestLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         imgView = (ImageView) findViewById(R.id.imageView);
+        bestLbl = (TextView) findViewById(R.id.bestLabel);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -37,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void captureImageClick(View v) {
         dispatchTakePictureIntent();
+
     }
 
     @Override
@@ -74,6 +93,40 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imgView.setImageBitmap(imageBitmap);
+
+            FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(imageBitmap);
+            FirebaseVisionLabelDetector detector = FirebaseVision.getInstance()
+                    .getVisionLabelDetector();
+            Task<List<FirebaseVisionLabel>> result =
+                    detector.detectInImage(image)
+                            .addOnSuccessListener(
+                                    new OnSuccessListener<List<FirebaseVisionLabel>>() {
+                                        @Override
+                                        public void onSuccess(List<FirebaseVisionLabel> labels) {
+
+                                            float bestLabelConfidence = 0;
+                                            for (FirebaseVisionLabel label : labels) {
+                                                if (label.getConfidence() > bestLabelConfidence) {
+                                                    bestLabel = label;
+                                                    bestLabelConfidence = label.getConfidence();
+                                                }
+                                                String text = label.getLabel();
+                                                String entityId = label.getEntityId();
+                                                float confidence = label.getConfidence() * 100;
+                                                Log.i("Image Feature", text + " : " + confidence + "% confidence");
+                                            }
+                                            bestLbl.setText(bestLabel.getLabel());
+
+                                        }
+                                    })
+                            .addOnFailureListener(
+                                    new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e("Image Detection", "FAILED");
+                                            e.printStackTrace();
+                                        }
+                                    });
         }
     }
 
