@@ -12,4 +12,5 @@
     <color name="accentMain">#1c907f</color>
     <color name="accentDark">#096D6D</color>
     <color name="dark">#104545</color>
+    <color name="light">#e2fae9</color>
 </resources>

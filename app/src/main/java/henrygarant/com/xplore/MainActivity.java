@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +27,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private String objectToDetect;
     private ImageView imgView;
     private TextView bestLbl;
     FirebaseVisionLabel bestLabel;
@@ -36,9 +36,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bundle b = getIntent().getExtras();
+        objectToDetect = b.getString("object");
+
+        Log.i("Object To Detect", objectToDetect + "");
+
         FirebaseApp.initializeApp(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
 
         imgView = (ImageView) findViewById(R.id.imageView);
         bestLbl = (TextView) findViewById(R.id.bestLabel);
